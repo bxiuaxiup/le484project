@@ -5,10 +5,26 @@
 extern "C" {
 #endif
 
-#include "stm32f4xx_hal.h"
+#define RED_ON()  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_SET)
+#define RED_OFF()  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET)
 
-// exported global variables
-extern int Button_Status;
+#define YELLOW_ON()  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_2, GPIO_PIN_SET)
+#define YELLOW_OFF()  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_2, GPIO_PIN_RESET)
+
+
+#define GREEN_ON()  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_4, GPIO_PIN_SET)
+#define GREEN_OFF()  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_4, GPIO_PIN_RESET)
+
+#define WALK_ON()  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_SET)
+#define WALK_OFF()  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_RESET)
+
+#define DWALK_ON()  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_SET)
+#define DWALK_OFF()  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_RESET)
+
+#define MODE_READ()     (HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_3) == SET)
+#define GREEN_TIME()     (HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_4) == SET)
+#define WALK_INTERVAL()     (HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_5) == SET)
+#define CONSTANT   99
 
 // Function prototype
 void BSP_Init(void);
