@@ -47,8 +47,6 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-int Button1 = 0;
-int Button2 = 0;
 
 /* USER CODE END PV */
 
@@ -61,56 +59,27 @@ static void MX_GPIO_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-int fputc(int ch, FILE *f){
-
-		return ITM_SendChar(ch);
+int fputc(int ch, FILE *f)
+{
+    return ITM_SendChar(ch);
 }
 
-Event_t Event_Detect(){
-				
-			Event_t evt = NO_EVT;
-		if(MODE_READ() != SET){
-			if(Timeout_Status){	
-					evt = TIMEOUT;
-					Timeout_Status = 0;
-			}
-			if(Button1 || Button2){
-					evt = BUTTON;
-					Button1 = 0;
-					Button2 = 0;
-			}
-		}else{
-			evt = MODE_CHANGE;
-			}
-    
-			
-			return evt;
+Event_t Event_Detect()
+{
+    Event_t evt = NO_EVT;
+		if(Timeout_Status){
+			evt = TIMEOUT;
+			Timeout_Status = 0;
+		}
 		
-}
-
-int Green_selected(){
-		int TimeGreen = 0;
-			if(GREEN_TIME() == SET){
-				TimeGreen = 1200;
-			}
-			else {
-				TimeGreen = 600;
-			}
-
-
-		return TimeGreen;
-}
-
-int Walk_selected(){
-		static int Walktime = 0;
-			if(WALK_INTERVAL() == SET){
-					Walktime = 200;
-			}
-			else {
-					Walktime = 100;
-			}
-
-		return Walktime;
+		if (Button_Status){
+			evt = BUTTON;
+			Button_Status = 0;
+		}
+		if(MODE_READ()){ //out of service switch
+			evt = MODE_CHANGE;
+		}
+    return evt;
 }
 /* USER CODE END 0 */
 
@@ -121,7 +90,7 @@ int Walk_selected(){
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+    
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -144,7 +113,7 @@ int main(void)
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
 
-/* USER CODE END 2 */
+  /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -153,18 +122,15 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	
-		Event_t evt = Event_Detect();   
-    uint32_t timeout_value = Ctrler_Exec(evt);
-    Timeout_Config(timeout_value);
-		Delay(1);
 		
 		
-		
-	
-	
-				
-	}
+    Event_t evt = Event_Detect();   //detect event
+    uint32_t timeout_value = Ctrler_Exec(evt); //Execute state machine, return timeout
+    Timeout_Config(timeout_value); //set timeout value in timer
+	  MIN_GREEN_TIME = GREEN_TIME_READ() ? 100: 600; //10s 60s
+		WALK_INTERVAL = WALK_READ() ? 100: 200; //10s 20s
+    Delay(1);
+  }
   /* USER CODE END 3 */
 }
 
@@ -229,10 +195,10 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(RED_GPIO_Port, RED_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOD, WALK_Pin|DWALK_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOD, WALK_Pin|DONT_WALK_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : MODE_SW_Pin MIN_GREEN_TIME_Pin WALK_INTERVAL_Pin */
-  GPIO_InitStruct.Pin = MODE_SW_Pin|MIN_GREEN_TIME_Pin|WALK_INTERVAL_Pin;
+  /*Configure GPIO pins : MIN_GREEN_SW_Pin WALK_INTERVAL_SW_Pin MODE_SW_Pin */
+  GPIO_InitStruct.Pin = MIN_GREEN_SW_Pin|WALK_INTERVAL_SW_Pin|MODE_SW_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
@@ -244,11 +210,11 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : Button1_Pin Button2_Pin */
-  GPIO_InitStruct.Pin = Button1_Pin|Button2_Pin;
+  /*Configure GPIO pin : Button1_Pin */
+  GPIO_InitStruct.Pin = Button1_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  HAL_GPIO_Init(Button1_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : RED_Pin */
   GPIO_InitStruct.Pin = RED_Pin;
@@ -257,8 +223,14 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(RED_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : WALK_Pin DWALK_Pin */
-  GPIO_InitStruct.Pin = WALK_Pin|DWALK_Pin;
+  /*Configure GPIO pin : PB15 */
+  GPIO_InitStruct.Pin = GPIO_PIN_15;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : WALK_Pin DONT_WALK_Pin */
+  GPIO_InitStruct.Pin = WALK_Pin|DONT_WALK_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;

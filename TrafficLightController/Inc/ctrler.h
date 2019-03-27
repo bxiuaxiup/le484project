@@ -9,18 +9,18 @@ extern "C" {
 #include "main.h"
 
 typedef enum {
-    NO_EVT, //0
-    BUTTON, //1
-    TIMEOUT, //2
-    MODE_CHANGE //3
+    NO_EVT,
+    BUTTON,
+    TIMEOUT,
+    MODE_CHANGE
 } Event_t;
 
 typedef enum {
-    RESTART, //0
-    THROUGH, //1
-    BLOCKED, //2
-    WAIT,  //3
-    OUT_OF_SERVICE //4
+    RESTART, 
+    THROUGH, 
+    BLOCKED, 
+    WAIT, 
+    OUT_OF_SERVICE
 } Ctrler_State_t;
 
 void Ctrler_Init(void);

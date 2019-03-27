@@ -1,7 +1,6 @@
 #include "bsp.h"
 #include "timer.h"
-#include "main.h"
-#include <stdio.h>
+
 // exported global variables
 volatile int Button_Status = 0;
 Light_t Light = RED;
@@ -22,8 +21,8 @@ void Signal_Pass(void) //Car Pass
 	WALK_OFF();	Delay(15);	WALK_ON();	Delay(15);
 	WALK_OFF();	Delay(15);	WALK_ON();	Delay(15);
   WALK_OFF();
-	DWALK_ON();
-	Delay(5);
+	DONT_WALK_ON();
+	Delay(DEAD_PERIOD);
 	RED_OFF();
 	Delay(5);
 	GREEN_ON();
@@ -36,15 +35,15 @@ void Signal_Pass(void) //Car Pass
 void Signal_Block(void)
 {
   GREEN_OFF();   //0.5s
-	Delay(5);
-	YELLOW_ON(); //0.5s
-	Delay(5);
+	Delay(3);
+	YELLOW_ON(); //1s
+	Delay(15);
 	YELLOW_OFF(); //0.5s
-	Delay(5);
-	RED_ON(); //0.5s
-	Delay(5);
-	DWALK_OFF();
-	Delay(5);
+	Delay(3);
+	RED_ON(); //DEAD_PERIOD
+	Delay(DEAD_PERIOD);
+	DONT_WALK_OFF();
+	Delay(3);
 	WALK_ON();
 	Light = RED;
 }
@@ -59,10 +58,10 @@ void Signal_Flash(void)
 	WALK_OFF();
 
 	YELLOW_OFF();
-	DWALK_OFF();
-	Delay(5); //0.5s
+	DONT_WALK_OFF();
+	Delay(10);
 	YELLOW_ON();
-	DWALK_ON();
-	Delay(10); //1.0s
+	DONT_WALK_ON();
+	Delay(10); 
 	
 }
