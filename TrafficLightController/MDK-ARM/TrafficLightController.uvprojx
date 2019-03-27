@@ -413,14 +413,14 @@
               <FilePath>../Src/stm32f4xx_hal_msp.c</FilePath>
             </File>
             <File>
-              <FileName>timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\timer.c</FilePath>
-            </File>
-            <File>
               <FileName>ctrler.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\ctrler.c</FilePath>
+              <FilePath>..\Src\ctrler.c</FilePath>
+            </File>
+            <File>
+              <FileName>timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\timer.c</FilePath>
             </File>
           </Files>
         </Group>
