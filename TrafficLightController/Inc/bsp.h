@@ -5,6 +5,18 @@
 extern "C" {
 #endif
 
+#include "stm32f4xx_hal.h"
+
+// exported global variables
+extern volatile int Button_Status;
+typedef enum {
+    GREEN,
+    YELLOW,
+    RED
+} Light_t;
+extern Light_t Light;
+
+// exported macros
 #define RED_ON()  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_SET)
 #define RED_OFF()  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET)
 
@@ -24,7 +36,7 @@ extern "C" {
 #define MODE_READ()     (HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_3) == SET)
 #define GREEN_TIME()     (HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_4) == SET)
 #define WALK_INTERVAL()     (HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_5) == SET)
-#define CONSTANT   99
+
 
 // Function prototype
 void BSP_Init(void);
