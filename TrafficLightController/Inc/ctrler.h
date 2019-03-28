@@ -7,7 +7,6 @@ extern "C" {
 
 #include "stm32f4xx_hal.h"
 #include "main.h"
-
 typedef enum {
     NO_EVT,
     BUTTON,

@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include "main.h"
 #include "timer.h"
-
 Ctrler_State_t Ctrler_State = RESTART;
 
 void Ctrler_Init()
@@ -51,7 +50,9 @@ uint32_t Ctrler_Exec(Event_t evt)
 					}
 					break;
 				case WAIT:
-				  printf("\tCar Pass(Dont Walk): %2d s\n", (MIN_GREEN_TIME - TimeGreen)/10);
+					
+				     printf("\tCar Pass(Dont Walk): %2d s\n", (MIN_GREEN_TIME - TimeGreen)/10);
+						
 					if(evt == MODE_CHANGE) {
 						Ctrler_State = OUT_OF_SERVICE;
 						break;

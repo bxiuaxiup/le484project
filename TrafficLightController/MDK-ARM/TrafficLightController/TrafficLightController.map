@@ -808,7 +808,7 @@ Image Symbol Table
     _printf_pre_padding                      0x080013d9   Thumb Code    46  printf6.o(i._printf_pre_padding)
     i.fputc                                  0x08001408   Section        0  main.o(i.fputc)
     i.main                                   0x08001430   Section        0  main.o(i.main)
-    .constdata                               0x08001490   Section       16  system_stm32f4xx.o(.constdata)
+    .constdata                               0x08001494   Section       16  system_stm32f4xx.o(.constdata)
     .data                                    0x20000000   Section        4  bsp.o(.data)
     .data                                    0x20000004   Section        1  bsp.o(.data)
     .data                                    0x20000005   Section        1  ctrler.o(.data)
@@ -1025,10 +1025,10 @@ Image Symbol Table
     __scatterload_null                       0x080010b3   Thumb Code     2  handlers.o(i.__scatterload_null)
     __scatterload_zeroinit                   0x080010b5   Thumb Code    14  handlers.o(i.__scatterload_zeroinit)
     fputc                                    0x08001409   Thumb Code    36  main.o(i.fputc)
-    main                                     0x08001431   Thumb Code    84  main.o(i.main)
-    AHBPrescTable                            0x08001490   Data          16  system_stm32f4xx.o(.constdata)
-    Region$$Table$$Base                      0x080014a0   Number         0  anon$$obj.o(Region$$Table)
-    Region$$Table$$Limit                     0x080014c0   Number         0  anon$$obj.o(Region$$Table)
+    main                                     0x08001431   Thumb Code    88  main.o(i.main)
+    AHBPrescTable                            0x08001494   Data          16  system_stm32f4xx.o(.constdata)
+    Region$$Table$$Base                      0x080014a4   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x080014c4   Number         0  anon$$obj.o(Region$$Table)
     Button_Status                            0x20000000   Data           4  bsp.o(.data)
     Light                                    0x20000004   Data           1  bsp.o(.data)
     Ctrler_State                             0x20000005   Data           1  ctrler.o(.data)
@@ -1053,9 +1053,9 @@ Memory Map of the image
 
   Image Entry point : 0x08000189
 
-  Load Region LR_IROM1 (Base: 0x08000000, Size: 0x000014f8, Max: 0x00100000, ABSOLUTE)
+  Load Region LR_IROM1 (Base: 0x08000000, Size: 0x000014fc, Max: 0x00100000, ABSOLUTE)
 
-    Execution Region ER_IROM1 (Exec base: 0x08000000, Load base: 0x08000000, Size: 0x000014c0, Max: 0x00100000, ABSOLUTE)
+    Execution Region ER_IROM1 (Exec base: 0x08000000, Load base: 0x08000000, Size: 0x000014c4, Max: 0x00100000, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
@@ -1131,25 +1131,25 @@ Memory Map of the image
     0x080013d8   0x080013d8   0x0000002e   Code   RO         1780    i._printf_pre_padding  mc_w.l(printf6.o)
     0x08001406   0x08001406   0x00000002   PAD
     0x08001408   0x08001408   0x00000028   Code   RO          245    i.fputc             main.o
-    0x08001430   0x08001430   0x00000060   Code   RO          246    i.main              main.o
-    0x08001490   0x08001490   0x00000010   Data   RO         1576    .constdata          system_stm32f4xx.o
-    0x080014a0   0x080014a0   0x00000020   Data   RO         1915    Region$$Table       anon$$obj.o
+    0x08001430   0x08001430   0x00000064   Code   RO          246    i.main              main.o
+    0x08001494   0x08001494   0x00000010   Data   RO         1576    .constdata          system_stm32f4xx.o
+    0x080014a4   0x080014a4   0x00000020   Data   RO         1915    Region$$Table       anon$$obj.o
 
 
-    Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x080014c0, Size: 0x00000438, Max: 0x00020000, ABSOLUTE)
+    Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x080014c4, Size: 0x00000438, Max: 0x00020000, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
-    0x20000000   0x080014c0   0x00000004   Data   RW           17    .data               bsp.o
-    0x20000004   0x080014c4   0x00000001   Data   RW           18    .data               bsp.o
-    0x20000005   0x080014c5   0x00000001   Data   RW          155    .data               ctrler.o
-    0x20000006   0x080014c6   0x00000002   PAD
-    0x20000008   0x080014c8   0x00000014   Data   RW          200    .data               timer.o
-    0x2000001c   0x080014dc   0x00000004   Data   RW          201    .data               timer.o
-    0x20000020   0x080014e0   0x00000004   Data   RW          202    .data               timer.o
-    0x20000024   0x080014e4   0x0000000c   Data   RW         1346    .data               stm32f4xx_hal.o
-    0x20000030   0x080014f0   0x00000004   Data   RW         1578    .data               system_stm32f4xx.o
-    0x20000034   0x080014f4   0x00000004   Data   RW         1891    .data               mc_w.l(stdout.o)
+    0x20000000   0x080014c4   0x00000004   Data   RW           17    .data               bsp.o
+    0x20000004   0x080014c8   0x00000001   Data   RW           18    .data               bsp.o
+    0x20000005   0x080014c9   0x00000001   Data   RW          155    .data               ctrler.o
+    0x20000006   0x080014ca   0x00000002   PAD
+    0x20000008   0x080014cc   0x00000014   Data   RW          200    .data               timer.o
+    0x2000001c   0x080014e0   0x00000004   Data   RW          201    .data               timer.o
+    0x20000020   0x080014e4   0x00000004   Data   RW          202    .data               timer.o
+    0x20000024   0x080014e8   0x0000000c   Data   RW         1346    .data               stm32f4xx_hal.o
+    0x20000030   0x080014f4   0x00000004   Data   RW         1578    .data               system_stm32f4xx.o
+    0x20000034   0x080014f8   0x00000004   Data   RW         1891    .data               mc_w.l(stdout.o)
     0x20000038        -       0x00000400   Zero   RW            1    STACK               startup_stm32f407xx.o
 
 
@@ -1161,8 +1161,8 @@ Image component sizes
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
 
        416         48          0          5          0     640778   bsp.o
-       276         98          0          1          0       2789   ctrler.o
-       624         68          0          0          0      34066   main.o
+       276         98          0          1          0       2793   ctrler.o
+       628         68          0          0          0      34074   main.o
         36          8        392          0       1024        876   startup_stm32f407xx.o
        128         20          0         12          0       3627   stm32f4xx_hal.o
        198         14          0          0          0      34191   stm32f4xx_hal_cortex.o
@@ -1174,7 +1174,7 @@ Image component sizes
        112         22          0         28          0       2386   timer.o
 
     ----------------------------------------------------------------------
-      3676        418        440         52       1024     735043   Object Totals
+      3680        418        440         52       1024     735055   Object Totals
          0          0         32          0          0          0   (incl. Generated)
         12          0          0          2          0          0   (incl. Padding)
 
@@ -1220,15 +1220,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-      4872        448        440         56       1024     732319   Grand Totals
-      4872        448        440         56       1024     732319   ELF Image Totals
-      4872        448        440         56          0          0   ROM Totals
+      4876        448        440         56       1024     732331   Grand Totals
+      4876        448        440         56       1024     732331   ELF Image Totals
+      4876        448        440         56          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                 5312 (   5.19kB)
+    Total RO  Size (Code + RO Data)                 5316 (   5.19kB)
     Total RW  Size (RW Data + ZI Data)              1080 (   1.05kB)
-    Total ROM Size (Code + RO Data + RW Data)       5368 (   5.24kB)
+    Total ROM Size (Code + RO Data + RW Data)       5372 (   5.25kB)
 
 ==============================================================================
 
