@@ -25,6 +25,7 @@
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
 #include <string.h>
+#include "bsp.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -40,6 +41,8 @@
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
 uint16_t Value;
+int INTERRUPT_1 = 0;
+int INTERRUPT_2 = 0;
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -59,10 +62,10 @@ UART_HandleTypeDef huart3;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
-static void MX_TIM1_Init(void);
-static void MX_TIM2_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_DAC_Init(void);
+static void MX_TIM1_Init(void);
+static void MX_TIM2_Init(void);
 static void MX_USART3_UART_Init(void);
 /* USER CODE BEGIN PFP */
 
@@ -74,6 +77,25 @@ int fputc(int ch, FILE *f)
 {
   return ITM_SendChar(ch);  
 }
+
+int ENABLE_1(){
+		static int EVENT_1 = 0;
+	if(INTERRUPT_1){		
+			EVENT_1 = !EVENT_1;
+			INTERRUPT_1 = 0;
+	}
+	return EVENT_1;
+}
+
+
+int ENABLE_2(){
+		static int EVENT_2 = 0;
+	if(INTERRUPT_2){		
+			EVENT_2 = !EVENT_2;
+			INTERRUPT_2 = 0;
+	}
+	return EVENT_2;
+}
 /* USER CODE END 0 */
 
 /**
@@ -83,7 +105,7 @@ int fputc(int ch, FILE *f)
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+uint16_t period = 0;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -104,43 +126,77 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_TIM1_Init();
-  MX_TIM2_Init();
   MX_ADC1_Init();
   MX_DAC_Init();
+  MX_TIM1_Init();
+  MX_TIM2_Init();
   MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
-  HAL_TIM_Base_Start(&htim1);   
-  HAL_TIM_PWM_Start(&htim1,TIM_CHANNEL_1);
-  HAL_TIM_Base_Start(&htim2);  
-  HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_4);  
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+		int Volt;
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    HAL_Delay(1000);
-    uint16_t period = 1999;
+		if(SWITCH_1()== SET){
+		period = 1999; //2000 us = 500Hz
+	}else {
+		period = 0;
+	}	
     __HAL_TIM_SET_AUTORELOAD(&htim1, period);
-    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, period/4);       
-    printf("Value: %d\n", Value);      
-      
-    HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R, 2000);
+  if(SWITCH_2() == SET){  
+		__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, period/4);       
+		printf("Value: %d\n", Value);
+		Value = 0;
+	 }else{
+		printf("PLEASE TURN ON SWITCH_2 FOR READ PERIOD\n");
+	 }
+	 	 
+	if(SWITCH_3() == SET){
+		Volt = 1861;
+	}else{
+		Volt = 0;
+	}
+	
+    HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R, Volt);
     HAL_DAC_Start(&hdac, DAC_CHANNEL_1);
-    HAL_ADC_Start(&hadc1);
+	if(SWITCH_4() == SET){
+		HAL_ADC_Start(&hadc1);
     while(HAL_ADC_PollForConversion(&hadc1, 1000));
     uint16_t analogVal = HAL_ADC_GetValue(&hadc1);
-    printf("Analog value: %d\n", analogVal);   
+		printf("Analog value: %d\n", analogVal);   
+	}else{
+		printf("PLEASE TURN ON SWITCH_4 FOR READ VOLTAGE\n");
+	}
 
-    char txt[] = "Hello";
-    static char Buffer[20];  
-    HAL_UART_Transmit_IT(&huart3, txt, strlen(txt));
-    HAL_UART_Receive_IT(&huart3, Buffer, 7);
-    printf("Text: %s, %s\n", txt, Buffer);
+	int EVENT_1 = ENABLE_1();
+	int EVENT_2 = ENABLE_2();
+		char txt1[] ="Hello,World";
+    static char Buffer[30];  
+  if(EVENT_1 == 1){
+		HAL_UART_Transmit_IT(&huart3, txt1, strlen(txt1));
+		HAL_UART_Receive_IT(&huart3, Buffer, 11);
+		printf("Text: %s, %s\n", txt1, Buffer);
+		if(EVENT_2==1){
+			printf("Number of received characters : %d\n", strlen(txt1));
+		}
+	}else{
+		printf("PLEASE PUSH BUTTON FOR TRANSMIT UART\n");
+	}
+	
+	
+	
+	
+	
+	
+	printf("***************************************************\n");
+	HAL_Delay(2000);
+	
   }
   /* USER CODE END 3 */
 }
@@ -180,7 +236,7 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
   {
@@ -208,7 +264,7 @@ static void MX_ADC1_Init(void)
   /** Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion) 
   */
   hadc1.Instance = ADC1;
-  hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV2;
+  hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
   hadc1.Init.Resolution = ADC_RESOLUTION_12B;
   hadc1.Init.ScanConvMode = DISABLE;
   hadc1.Init.ContinuousConvMode = DISABLE;
@@ -439,11 +495,32 @@ static void MX_USART3_UART_Init(void)
   */
 static void MX_GPIO_Init(void)
 {
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
 
   /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
+
+  /*Configure GPIO pins : SWITCH_1_Pin SWITCH_2_Pin SWITCH_3_Pin SWITCH_4_Pin */
+  GPIO_InitStruct.Pin = SWITCH_1_Pin|SWITCH_2_Pin|SWITCH_3_Pin|SWITCH_4_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : INTERRUPT_1_Pin INTERRUPT_2_Pin */
+  GPIO_InitStruct.Pin = INTERRUPT_1_Pin|INTERRUPT_2_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI2_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI2_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
 }
 

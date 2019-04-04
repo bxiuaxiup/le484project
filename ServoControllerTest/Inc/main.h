@@ -60,6 +60,20 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define SWITCH_1_Pin GPIO_PIN_3
+#define SWITCH_1_GPIO_Port GPIOE
+#define SWITCH_2_Pin GPIO_PIN_4
+#define SWITCH_2_GPIO_Port GPIOE
+#define SWITCH_3_Pin GPIO_PIN_5
+#define SWITCH_3_GPIO_Port GPIOE
+#define SWITCH_4_Pin GPIO_PIN_6
+#define SWITCH_4_GPIO_Port GPIOE
+#define INTERRUPT_1_Pin GPIO_PIN_2
+#define INTERRUPT_1_GPIO_Port GPIOB
+#define INTERRUPT_1_EXTI_IRQn EXTI2_IRQn
+#define INTERRUPT_2_Pin GPIO_PIN_15
+#define INTERRUPT_2_GPIO_Port GPIOB
+#define INTERRUPT_2_EXTI_IRQn EXTI15_10_IRQn
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
