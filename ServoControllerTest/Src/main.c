@@ -132,7 +132,10 @@ uint16_t period = 0;
   MX_TIM2_Init();
   MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
-
+  HAL_TIM_Base_Start(&htim1);   //
+  HAL_TIM_PWM_Start(&htim1,TIM_CHANNEL_1);
+  HAL_TIM_Base_Start(&htim2);  
+  HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_4);  //START INTERRUPT
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -143,21 +146,21 @@ uint16_t period = 0;
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-		if(SWITCH_1()== SET){
+		if(SWITCH_3()== SET){
 		period = 1999; //2000 us = 500Hz
 	}else {
 		period = 0;
 	}	
     __HAL_TIM_SET_AUTORELOAD(&htim1, period);
-  if(SWITCH_2() == SET){  
+  if(SWITCH_1() == SET){  
 		__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, period/4);       
 		printf("Value: %d\n", Value);
 		Value = 0;
 	 }else{
-		printf("PLEASE TURN ON SWITCH_2 FOR READ PERIOD\n");
+		printf("PLEASE TURN ON SWITCH_1 FOR READ PERIOD\n");
 	 }
 	 	 
-	if(SWITCH_3() == SET){
+	if(SWITCH_4() == SET){
 		Volt = 1861;
 	}else{
 		Volt = 0;
@@ -165,13 +168,13 @@ uint16_t period = 0;
 	
     HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R, Volt);
     HAL_DAC_Start(&hdac, DAC_CHANNEL_1);
-	if(SWITCH_4() == SET){
+	if(SWITCH_2() == SET){
 		HAL_ADC_Start(&hadc1);
     while(HAL_ADC_PollForConversion(&hadc1, 1000));
     uint16_t analogVal = HAL_ADC_GetValue(&hadc1);
 		printf("Analog value: %d\n", analogVal);   
 	}else{
-		printf("PLEASE TURN ON SWITCH_4 FOR READ VOLTAGE\n");
+		printf("PLEASE TURN ON SWITCH_2 FOR READ VOLTAGE\n");
 	}
 
 	int EVENT_1 = ENABLE_1();
@@ -180,7 +183,7 @@ uint16_t period = 0;
     static char Buffer[30];  
   if(EVENT_1 == 1){
 		HAL_UART_Transmit_IT(&huart3, txt1, strlen(txt1));
-		HAL_UART_Receive_IT(&huart3, Buffer, 11);
+		HAL_UART_Receive_IT(&huart3, Buffer, strlen(txt1));
 		printf("Text: %s, %s\n", txt1, Buffer);
 		if(EVENT_2==1){
 			printf("Number of received characters : %d\n", strlen(txt1));

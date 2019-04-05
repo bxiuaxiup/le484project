@@ -30,13 +30,13 @@ Build target 'ServoControllerTest'
 compiling main.c...
 ../Inc/bsp.h(19): warning:  #1-D: last line of file ends without a newline
   #endif /* __BSP_H */
-../Src/main.c(182): warning:  #167-D: argument of type "char *" is incompatible with parameter of type "uint8_t *"
+../Src/main.c(185): warning:  #167-D: argument of type "char *" is incompatible with parameter of type "uint8_t *"
   		HAL_UART_Transmit_IT(&huart3, txt1, strlen(txt1));
-../Src/main.c(183): warning:  #167-D: argument of type "char *" is incompatible with parameter of type "uint8_t *"
-  		HAL_UART_Receive_IT(&huart3, Buffer, 11);
+../Src/main.c(186): warning:  #167-D: argument of type "char *" is incompatible with parameter of type "uint8_t *"
+  		HAL_UART_Receive_IT(&huart3, Buffer, strlen(txt1));
 ../Src/main.c: 3 warnings, 0 errors
 linking...
-Program Size: Code=10360 RO-data=448 RW-data=40 ZI-data=1344  
+Program Size: Code=10616 RO-data=448 RW-data=40 ZI-data=1344  
 FromELF: creating hex file...
 "ServoControllerTest\ServoControllerTest.axf" - 0 Error(s), 3 Warning(s).
 
@@ -61,7 +61,7 @@ Package Vendor: Keil
 <h2>Collection of Component Files used:</h2>
 
    * Component: ARM::CMSIS:CORE:5.2.0
-Build Time Elapsed:  00:00:04
+Build Time Elapsed:  00:00:09
 </pre>
 </body>
 </html>
